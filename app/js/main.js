@@ -9,6 +9,7 @@ view.onSelectFile((event) => {
   view.clearImageContainer(imageContainer)
   const file = event.target.files[0]
 
+  if(!file) return view.log('No file chosen')
   if(!isValidImage(file)) return view.log(`not a valid Image file : ${file.name}`)
 
   readFile(file)
