@@ -19,7 +19,9 @@ const showImage = (imageData) =>
     imageContainer.appendChild(img)
   })
 
-const onSelectFile = (onSelect) => fileSelector.onchange = onSelect
+const onSelectFile = (onSelect) =>
+  fileSelector.onchange = (event) => onSelect(event.target.files[0])
+
 const onGenerate = (onGenerate) => generateButton.onclick = onGenerate
 
 module.exports = { log, clearImageContainer, showImage, onSelectFile, onGenerate }

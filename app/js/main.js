@@ -5,19 +5,18 @@ const AVAILABLE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif']
 
 const isValidImage = (file) => AVAILABLE_IMAGE_TYPES.includes(file.type)
 
-view.onSelectFile((event) => {
+view.onSelectFile((file) => {
   view.clearImageContainer(imageContainer)
-  const file = event.target.files[0]
 
   if(!file) return view.log('No file chosen')
   if(!isValidImage(file)) return view.log(`not a valid Image file : ${file.name}`)
 
   readFile(file)
     .then(view.showImage)
-    .then((event) => {
+    .then((image) => {
       const imageData = {
-          'width': event.target.naturalWidth,
-          'height': event.target.naturalHeight
+        'width': image.naturalWidth,
+        'height': image.naturalHeight
       }
       view.log( 'Loaded Image w/dimensions ' + imageData.width + ' x ' + imageData.height )
     })
