@@ -11,17 +11,30 @@ const clearImageContainer = (container) => {
   }
 }
 
-const showImage = (imageData) =>
+const loadImage = (imageData) =>
   new Promise((resolve) => {
     const img = new Image()
+    img.onload = () => resolve(img)
     img.src = imageData
-    img.onload = resolve
-    imageContainer.appendChild(img)
   })
+
+const showImage = (img) => {
+  ctx = imageContainer.getContext("2d")
+  ctx.drawImage(img, 0, 0)
+  return img
+}
 
 const onSelectFile = (onSelect) =>
   fileSelector.onchange = (event) => onSelect(event.target.files[0])
 
 const onGenerate = (onGenerate) => generateButton.onclick = onGenerate
 
-module.exports = { log, clearImageContainer, showImage, onSelectFile, onGenerate }
+module.exports = {
+  log,
+  clearImageContainer,
+  showImage,
+  onSelectFile,
+  onGenerate,
+  loadImage,
+  DPI
+}

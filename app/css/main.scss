@@ -6,7 +6,7 @@ body {
 
 #imageContainer,
 #debugContainer {
-  padding: 1em;
+  margin: 1em;
   box-sizing: border-box;
 }
 
@@ -25,9 +25,9 @@ body {
 }
 
 #imageContainer {
-  img {
-    width: 100%;
-  }
+  width: 3in;
+  height: 2in;
+  border: 1px solid blue;
 }
 
 #debugContainer {
