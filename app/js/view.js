@@ -2,17 +2,19 @@ const fileSelector = document.getElementById( 'fileSelector' )
 const imageContainer = document.getElementById( 'imageContainer' )
 const debugContainer = document.getElementById( 'debugContainer' )
 const generateButton = document.getElementById( 'generateButton' )
-const SCALE = 1/5
+const SCALE = 1/3
 const CANVAS_WIDTH = 15 // inch
 const CANVAS_HEIGH = 10 // inch
 const DPI = imageContainer.offsetHeight / (CANVAS_HEIGH * SCALE)
 
+imageContainer.style.width = `${CANVAS_WIDTH * SCALE}in`
+imageContainer.style.height = `${CANVAS_HEIGH * SCALE}in`
+
 const log = (msg) => debugContainer.innerHTML += '<p>' + msg + '</p>'
 
 const clearImageContainer = (container) => {
-  while (container.hasChildNodes()) {
-    container.removeChild(container.firstChild)
-  }
+  ctx = imageContainer.getContext("2d")
+  ctx.clearRect(0, 0, imageContainer.width, imageContainer.height)
 }
 
 const loadImage = (imageData) =>
