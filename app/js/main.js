@@ -1,4 +1,5 @@
-const readFile = require('./read-file')
+const loadImage = require('./load-image')
+const { pixelsToInches } = require('./conversion')
 const {
   onGenerate,
   onSelectFile,
@@ -10,10 +11,7 @@ const {
   onScaleDown,
   onLoad,
   log,
-  clear,
-  loadImage,
-  renderImage,
-  pixelsToInches
+  canvas
 } = require('./view')
 
 const MOVE_STEP = 0.3
@@ -32,7 +30,7 @@ let store = Object.assign({}, initialStore)
 let savedData = undefined
 
 const resetState = () => {
-  clear()
+  canvas.clear()
   loadedImage = undefined
   loadedFile = undefined
 
@@ -46,16 +44,14 @@ onSelectFile((file) => {
 
   loadedFile = file
 
-  readFile(file)
-    .then(loadImage)
-    .then((img) => {
-      loadedImage = img
-      store.width = pixelsToInches(img.naturalWidth)
-      store.height = pixelsToInches(img.naturalHeight)
-      store = renderImage(img, store)
+  loadImage(file).then((img) => {
+    loadedImage = img
+    store.width = pixelsToInches(img.naturalWidth)
+    store.height = pixelsToInches(img.naturalHeight)
+    store = canvas.renderImage(img, store)
 
-      log('Loaded Image w/dimensions ' + img.naturalWidth + ' x ' + img.naturalHeight)
-    })
+    log('Loaded Image w/dimensions ' + img.naturalWidth + ' x ' + img.naturalHeight)
+  })
 })
 
 onGenerate(() => {
@@ -69,39 +65,39 @@ onGenerate(() => {
 onLoad(() => {
   if(!savedData) return log('No data to load')
   store = Object.assign({}, savedData)
-  store = renderImage(loadedImage, store)
+  store = canvas.renderImage(loadedImage, store)
 })
 
 onMoveLeft(() => {
   store.x = store.x - MOVE_STEP
-  store = renderImage(loadedImage, store)
+  store = canvas.renderImage(loadedImage, store)
 })
 
 onMoveRight(() => {
   store.x = store.x + MOVE_STEP
-  store = renderImage(loadedImage, store)
+  store = canvas.renderImage(loadedImage, store)
 })
 
 onMoveUp(() => {
   store.y = store.y - MOVE_STEP
-  store = renderImage(loadedImage, store)
+  store = canvas.renderImage(loadedImage, store)
 })
 
 onMoveDown(() => {
   store.y = store.y + MOVE_STEP
-  store = renderImage(loadedImage, store)
+  store = canvas.renderImage(loadedImage, store)
 })
 
 onScaleUp(() => {
   store.width = store.width + store.width * SCALE_STEP
   store.height = store.height + store.height * SCALE_STEP
-  store = renderImage(loadedImage, store)
+  store = canvas.renderImage(loadedImage, store)
 })
 
 onScaleDown(() => {
   store.width = store.width - store.width * SCALE_STEP
   store.height = store.height - store.height * SCALE_STEP
-  store = renderImage(loadedImage, store)
+  store = canvas.renderImage(loadedImage, store)
 })
 
 log('Test application ready')
