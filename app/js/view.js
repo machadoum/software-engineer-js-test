@@ -1,8 +1,9 @@
-const fileSelector = document.getElementById('fileSelector')
-const imageContainer = document.getElementById('imageContainer')
-const ctx = imageContainer.getContext("2d")
-const debugContainer = document.getElementById('debugContainer')
-const generateButton = document.getElementById('generateButton')
+const fileSelector = document.getElementById('file-selector')
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext("2d")
+const debugContainer = document.getElementById('debug-container')
+const generateButton = document.getElementById('generate')
+const loadButton = document.getElementById('load')
 const moveLeftButton = document.getElementById('move-left')
 const moveRightButton = document.getElementById('move-right')
 const moveUpButton = document.getElementById('move-up')
@@ -18,14 +19,13 @@ const DPI = 96
 const inchesToPixels = (inches) => inches * DPI
 const pixelsToInches = (pixels) => pixels / DPI
 
-imageContainer.width = inchesToPixels(CANVAS_WIDTH)
-imageContainer.height = inchesToPixels(CANVAS_HEIGH)
-
+canvas.width = inchesToPixels(CANVAS_WIDTH)
+canvas.height = inchesToPixels(CANVAS_HEIGH)
 
 const log = (msg) => debugContainer.innerHTML += '<p>' + msg + '</p>'
 
-const clearImageContainer = () => {
-  ctx.clearRect(0, 0, imageContainer.width, imageContainer.height)
+const clear = () => {
+  ctx.clearRect(0, 0, inchesToPixels(CANVAS_WIDTH), inchesToPixels(CANVAS_HEIGH))
 }
 
 const loadImage = (imageData) =>
@@ -36,7 +36,7 @@ const loadImage = (imageData) =>
   })
 
 const showImage = (img, {x, y, width, height} = {}) => {
-  clearImageContainer()
+  clear()
 
   ctx.drawImage(img,
     inchesToPixels(x) * SCALE,
@@ -56,10 +56,11 @@ const onMoveUp = (onClick) => moveUpButton.onclick = onClick
 const onMoveDown = (onClick) => moveDownButton.onclick = onClick
 const onScaleUp = (onClick) => scaleUpButton.onclick = onClick
 const onScaleDown = (onClick) => scaleDownButton.onclick = onClick
+const onLoad = (onClick) => loadButton.onclick = onClick
 
 module.exports = {
   log,
-  clearImageContainer,
+  clear,
   showImage,
   onSelectFile,
   onGenerate,
@@ -72,4 +73,5 @@ module.exports = {
   onScaleDown,
   inchesToPixels,
   pixelsToInches,
+  onLoad
 }

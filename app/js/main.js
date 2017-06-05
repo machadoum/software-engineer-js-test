@@ -8,8 +8,9 @@ const {
   onMoveDown,
   onScaleUp,
   onScaleDown,
+  onLoad,
   log,
-  clearImageContainer,
+  clear,
   loadImage,
   showImage,
   pixelsToInches
@@ -28,9 +29,10 @@ const initialStore = {
   height: 0
 }
 let store = Object.assign({}, initialStore)
+let savedData = undefined
 
 const resetState = () => {
-  clearImageContainer(imageContainer)
+  clear()
   loadedImage = undefined
   loadedFile = undefined
 
@@ -59,9 +61,15 @@ onSelectFile((file) => {
 onGenerate(() => {
   if(!loadedImage) return log('No image loaded')
 
-  const generatedData = Object.assign({ id: loadedFile.name }, store)
+  savedData = Object.assign({ id: loadedFile.name }, store)
 
-  log('Generated Image:' + JSON.stringify(generatedData))
+  log('Generated Image:' + JSON.stringify(savedData))
+})
+
+onLoad(() => {
+  if(!savedData) return log('No data to load')
+  store = Object.assign({}, savedData)
+  showImage(loadedImage, store)
 })
 
 onMoveLeft(() => {

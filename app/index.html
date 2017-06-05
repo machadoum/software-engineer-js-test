@@ -15,22 +15,24 @@
         <form action="#">
             <fieldset>
                 <label for="fileSelector">Select an Image file</label>
-                <input type="file" id="fileSelector" />
+                <input type="file" id="file-selector" />
             </fieldset>
         </form>
         <div class="column left">
-            <canvas id="imageContainer"></canvas>
-            <button id="generateButton">Generate!</button>
-
+            <canvas id="canvas"></canvas>
+            <br />
             <button id="move-left">Left</button>
             <button id="move-right">Right</button>
             <button id="move-up">Up</button>
             <button id="move-down">Down</button>
             <button id="scale-down">Scale Down</button>
             <button id="scale-up">Scale Up</button>
+            <br />
+            <button id="generate">Generate!</button>
+            <button id="load">load</button>
         </div>
         <div class="column right">
-            <div id="debugContainer">
+            <div id="debug-container">
                 <!-- will hold debug messages -->
             </div>
         </div>
