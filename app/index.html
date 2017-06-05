@@ -19,17 +19,22 @@
             </fieldset>
         </form>
         <div class="column left">
-            <canvas id="canvas"></canvas>
-            <br />
-            <button id="move-left">Left</button>
-            <button id="move-right">Right</button>
+          <canvas id="canvas"></canvas>
+          <br />
+          <div class="movements">
             <button id="move-up">Up</button>
+            <div>
+              <button id="move-left">Left</button>
+              <button id="move-right">Right</button>
+            </div>
             <button id="move-down">Down</button>
-            <button id="scale-down">Scale Down</button>
-            <button id="scale-up">Scale Up</button>
-            <br />
+          </div>
+          <button id="scale-down">-</button>
+          <button id="scale-up">+</button>
+          <div class="actions">
             <button id="generate">Generate!</button>
             <button id="load">load</button>
+          </div>
         </div>
         <div class="column right">
             <div id="debug-container">
