@@ -35,15 +35,55 @@ const loadImage = (imageData) =>
     img.src = imageData
   })
 
-const showImage = (img, {x, y, width, height} = {}) => {
+const scaleDownProperties = ({ x, y, width, height }) => ({
+  x: x * SCALE,
+  y: y * SCALE,
+  width: width * SCALE,
+  height: height * SCALE,
+})
+
+const scaleUPProperties = ({ x, y, width, height }) => ({
+  x: x / SCALE,
+  y: y / SCALE,
+  width: width / SCALE,
+  height: height / SCALE,
+})
+const scaleImageToCoverFullCanvas = ({ x, y, width, height }) => {
+  const aspectRatio = width / height
+
+  if(width < CANVAS_WIDTH) {
+    width = CANVAS_WIDTH
+    height = width / aspectRatio
+  }
+
+  if(height < CANVAS_HEIGH) {
+    height = CANVAS_HEIGH
+    width = height * aspectRatio
+  }
+
+  if (x > 0) x = 0
+  if (y > 0) y = 0
+
+  if (width - CANVAS_WIDTH < -x) x = CANVAS_WIDTH - width
+  if (height - CANVAS_HEIGH < -y) y = CANVAS_HEIGH - height
+
+  return { x, y, width, height }
+}
+
+const renderImage = (img, properties) => {
   clear()
 
+  const { x, y, width, height } =
+    scaleImageToCoverFullCanvas(scaleDownProperties(properties))
+
   ctx.drawImage(img,
-    inchesToPixels(x) * SCALE,
-    inchesToPixels(y) * SCALE,
-    inchesToPixels(width) * SCALE,
-    inchesToPixels(height) * SCALE
+    inchesToPixels(x),
+    inchesToPixels(y),
+    inchesToPixels(width),
+    inchesToPixels(height)
   )
+
+  return scaleUPProperties({ x, y, width, height })
 }
 
 const onSelectFile = (onSelect) =>
@@ -61,7 +101,7 @@ const onLoad = (onClick) => loadButton.onclick = onClick
 module.exports = {
   log,
   clear,
-  showImage,
+  renderImage,
   onSelectFile,
   onGenerate,
   loadImage,

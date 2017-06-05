@@ -12,7 +12,7 @@ const {
   log,
   clear,
   loadImage,
-  showImage,
+  renderImage,
   pixelsToInches
 } = require('./view')
 
@@ -52,7 +52,7 @@ onSelectFile((file) => {
       loadedImage = img
       store.width = pixelsToInches(img.naturalWidth)
       store.height = pixelsToInches(img.naturalHeight)
-      showImage(img, store)
+      store = renderImage(img, store)
 
       log('Loaded Image w/dimensions ' + img.naturalWidth + ' x ' + img.naturalHeight)
     })
@@ -69,40 +69,39 @@ onGenerate(() => {
 onLoad(() => {
   if(!savedData) return log('No data to load')
   store = Object.assign({}, savedData)
-  showImage(loadedImage, store)
+  store = renderImage(loadedImage, store)
 })
 
 onMoveLeft(() => {
   store.x = store.x - MOVE_STEP
-  showImage(loadedImage, store)
+  store = renderImage(loadedImage, store)
 })
 
 onMoveRight(() => {
   store.x = store.x + MOVE_STEP
-  showImage(loadedImage, store)
+  store = renderImage(loadedImage, store)
 })
 
 onMoveUp(() => {
   store.y = store.y - MOVE_STEP
-  showImage(loadedImage, store)
+  store = renderImage(loadedImage, store)
 })
 
 onMoveDown(() => {
   store.y = store.y + MOVE_STEP
-  showImage(loadedImage, store)
+  store = renderImage(loadedImage, store)
 })
 
 onScaleUp(() => {
   store.width = store.width + store.width * SCALE_STEP
   store.height = store.height + store.height * SCALE_STEP
-  showImage(loadedImage, store)
+  store = renderImage(loadedImage, store)
 })
 
 onScaleDown(() => {
   store.width = store.width - store.width * SCALE_STEP
   store.height = store.height - store.height * SCALE_STEP
-  showImage(loadedImage, store)
+  store = renderImage(loadedImage, store)
 })
-
 
 log('Test application ready')
