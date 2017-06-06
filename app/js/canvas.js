@@ -1,7 +1,7 @@
 const { inchesToPixels } = require('./conversion')
 
 const canvas = document.getElementById('canvas')
-const ctx = canvas.getContext("2d")
+const ctx = canvas.getContext('2d')
 
 const CANVAS_SCALE = 1/3
 const CANVAS_WIDTH = 15 * CANVAS_SCALE

@@ -1,103 +1,76 @@
 const loadImage = require('./load-image')
 const { pixelsToInches } = require('./conversion')
-const {
-  onGenerate,
-  onSelectFile,
-  onMoveLeft,
-  onMoveRight,
-  onMoveUp,
-  onMoveDown,
-  onScaleUp,
-  onScaleDown,
-  onLoad,
-  log,
-  canvas
-} = require('./view')
+const { setHandlers, log, canvas } = require('./view')
 
 const MOVE_STEP = 0.3
-const SCALE_STEP = 0.1
+const SCALE_RATE = 0.1
 const AVAILABLE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif']
-const isValidImage = (file) => AVAILABLE_IMAGE_TYPES.includes(file.type)
-let loadedImage = undefined
-let loadedFile = undefined
-const initialStore = {
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0
-}
-let store = Object.assign({}, initialStore)
+
+const initialState = { img: undefined, id: undefined, x: 0, y: 0, width: 0, height: 0 }
+let state = Object.assign({}, initialState)
 let savedData = undefined
 
-const resetState = () => {
-  canvas.clear()
-  loadedImage = undefined
-  loadedFile = undefined
-
-  store = Object.assign({}, initialStore)
+const setState = (newState) => {
+  state = Object.assign({}, state, newState)
+  render()
 }
 
-onSelectFile((file) => {
-  resetState()
-  if(!file) return log('No file chosen')
-  if(!isValidImage(file)) return log(`not a valid Image file : ${file.name}`)
+const render = () => {
+  const newState = canvas.renderImage(state.img, state)
+  state = Object.assign({}, state, newState)
+}
 
-  loadedFile = file
+const isValidImage = (file) => AVAILABLE_IMAGE_TYPES.includes(file.type)
 
-  loadImage(file).then((img) => {
-    loadedImage = img
-    store.width = pixelsToInches(img.naturalWidth)
-    store.height = pixelsToInches(img.naturalHeight)
-    store = canvas.renderImage(img, store)
+setHandlers({
+  onSelectFile: (file) => {
+    if(!file) return log('No file chosen')
+    if(!isValidImage(file)) return log(`not a valid Image file : ${file.name}`)
 
-    log('Loaded Image w/dimensions ' + img.naturalWidth + ' x ' + img.naturalHeight)
-  })
-})
+    loadImage(file).then((img) => {
+      setState({
+        id: file.name,
+        img,
+        width: pixelsToInches(img.naturalWidth),
+        height: pixelsToInches(img.naturalHeight)
+      })
 
-onGenerate(() => {
-  if(!loadedImage) return log('No image loaded')
+      log('Loaded Image w/dimensions ' + img.naturalWidth + ' x ' + img.naturalHeight)
+    })
+  },
 
-  savedData = Object.assign({ id: loadedFile.name }, store)
+  onGenerate: () => {
+    if(!state.img) return log('No image loaded')
 
-  log('Generated Image:' + JSON.stringify(savedData))
-})
+    savedData = Object.assign({}, state)
 
-onLoad(() => {
-  if(!savedData) return log('No data to load')
-  store = Object.assign({}, savedData)
-  store = canvas.renderImage(loadedImage, store)
-})
+    log('Generated Image:' + JSON.stringify(savedData))
+  },
 
-onMoveLeft(() => {
-  store.x = store.x - MOVE_STEP
-  store = canvas.renderImage(loadedImage, store)
-})
+  onLoad: () => {
+    if(!savedData) return log('No data to load')
+    setState(savedData)
+  },
 
-onMoveRight(() => {
-  store.x = store.x + MOVE_STEP
-  store = canvas.renderImage(loadedImage, store)
-})
+  onMoveLeft: () => setState({ x: state.x - MOVE_STEP }),
+  onMoveRight: () => setState({ x: state.x + MOVE_STEP }),
+  onMoveUp: () => setState({ y: state.y - MOVE_STEP }),
+  onMoveDown: () => setState({ y: state.y + MOVE_STEP }),
+  onScaleUp: () => {
+    const multiplier = 1 + SCALE_RATE
+    setState({
+      width: state.width * multiplier,
+      height: state.height * multiplier
+    })
+  },
 
-onMoveUp(() => {
-  store.y = store.y - MOVE_STEP
-  store = canvas.renderImage(loadedImage, store)
-})
-
-onMoveDown(() => {
-  store.y = store.y + MOVE_STEP
-  store = canvas.renderImage(loadedImage, store)
-})
-
-onScaleUp(() => {
-  store.width = store.width + store.width * SCALE_STEP
-  store.height = store.height + store.height * SCALE_STEP
-  store = canvas.renderImage(loadedImage, store)
-})
-
-onScaleDown(() => {
-  store.width = store.width - store.width * SCALE_STEP
-  store.height = store.height - store.height * SCALE_STEP
-  store = canvas.renderImage(loadedImage, store)
+  onScaleDown: () => {
+    const multiplier = 1 - SCALE_RATE
+    setState({
+      width: state.width * multiplier,
+      height: state.height * multiplier
+    })
+  }
 })
 
 log('Test application ready')
