@@ -2,21 +2,25 @@ const loadImage = require('./load-image')
 const { pixelsToInches } = require('./conversion')
 const { setHandlers, log, canvas } = require('./view')
 const storage = require('./storage')
+const resizeToCoverFullCanvas = require('./resize-full-cover')
 
 const MOVE_STEP = 0.3
 const SCALE_RATE = 0.1
+const CANVAS_WIDTH = 15
+const CANVAS_HEIGH = 10
 const AVAILABLE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif']
+
+canvas.initialize(CANVAS_WIDTH, CANVAS_HEIGH)
 
 const initialState = { img: undefined, id: undefined, x: 0, y: 0, width: 0, height: 0 }
 let state = Object.assign({}, initialState)
 
-const render = () => {
-  const newState = canvas.renderImage(state.img, state)
-  state = Object.assign({}, state, newState)
-}
+const render = () => canvas.renderImage(state.img, state)
 
 const setState = (newState) => {
-  state = Object.assign({}, state, newState)
+  const partialState = Object.assign({}, state, newState)
+  const resizedProperties = resizeToCoverFullCanvas(partialState, CANVAS_WIDTH, CANVAS_HEIGH)
+  state = Object.assign(partialState, resizedProperties)
   render()
 }
 

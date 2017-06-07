@@ -3,53 +3,31 @@ const { inchesToPixels } = require('./conversion')
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 
-const CANVAS_SCALE = 1 / 3
-const CANVAS_WIDTH = 15 * CANVAS_SCALE
-const CANVAS_HEIGH = 10 * CANVAS_SCALE
+let scale = 1 / 3
 
-canvas.width = inchesToPixels(CANVAS_WIDTH)
-canvas.height = inchesToPixels(CANVAS_HEIGH)
-
-const scaleObjectValues = (obj, scale) => {
-  const scaledObject = {}
-  Object.keys(obj).forEach((key) => { scaledObject[key] = obj[key] * scale })
-  return scaledObject
+const initialize = (inchesWidth, inchesHeight, scaleParam = 1 / 3) => {
+  scale = scaleParam
+  const { width, height } = scaleDownProperties({ width: inchesWidth, height: inchesHeight })
+  canvas.width = inchesToPixels(width)
+  canvas.height = inchesToPixels(height)
 }
 
-const scaleUpProperties = (obj) => scaleObjectValues(obj, 1 / CANVAS_SCALE)
-const scaleDownProperties = (obj) => scaleObjectValues(obj, CANVAS_SCALE)
-
-const scaleImageToCoverFullCanvas = (parameters) => {
-  let { x, y, width, height } = parameters
-  const aspectRatio = width / height
-
-  if (width < CANVAS_WIDTH) {
-    width = CANVAS_WIDTH
-    height = width / aspectRatio
-  }
-
-  if (height < CANVAS_HEIGH) {
-    height = CANVAS_HEIGH
-    width = height * aspectRatio
-  }
-
-  if (x > 0) x = 0
-  if (y > 0) y = 0
-
-  if (width - CANVAS_WIDTH < -x) x = CANVAS_WIDTH - width
-  if (height - CANVAS_HEIGH < -y) y = CANVAS_HEIGH - height
-
-  return { x, y, width, height }
-}
+const scaleProperties = ({ x, y, width, height }, multiplier) => ({
+  x: x * multiplier,
+  y: y * multiplier,
+  width: width * multiplier,
+  height: height * multiplier
+})
+const scaleUpProperties = (obj) => scaleProperties(obj, 1 / scale)
+const scaleDownProperties = (obj) => scaleProperties(obj, scale)
 
 const clear = () =>
-  ctx.clearRect(0, 0, inchesToPixels(CANVAS_WIDTH), inchesToPixels(CANVAS_HEIGH))
+  ctx.clearRect(0, 0, inchesToPixels(canvas.width), inchesToPixels(canvas.height))
 
 const renderImage = (img, properties) => {
   clear()
 
-  const { x, y, width, height } =
-    scaleImageToCoverFullCanvas(scaleDownProperties(properties))
+  const { x, y, width, height } = scaleDownProperties(properties)
 
   ctx.drawImage(img,
     inchesToPixels(x),
@@ -62,5 +40,5 @@ const renderImage = (img, properties) => {
 }
 
 module.exports = {
-  renderImage, clear
+  renderImage, clear, initialize
 }
