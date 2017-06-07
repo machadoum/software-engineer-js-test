@@ -5,7 +5,7 @@ const createImage = (imageData) =>
     img.src = imageData
   })
 
- const readFileData = (file) =>
+const readFileData = (file) =>
   new Promise((resolve) => {
     const reader = new FileReader()
     reader.onload = (event) => resolve(event.target.result)

@@ -8,24 +8,24 @@ const AVAILABLE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif']
 
 const initialState = { img: undefined, id: undefined, x: 0, y: 0, width: 0, height: 0 }
 let state = Object.assign({}, initialState)
-let savedData = undefined
-
-const setState = (newState) => {
-  state = Object.assign({}, state, newState)
-  render()
-}
+let savedData
 
 const render = () => {
   const newState = canvas.renderImage(state.img, state)
   state = Object.assign({}, state, newState)
 }
 
+const setState = (newState) => {
+  state = Object.assign({}, state, newState)
+  render()
+}
+
 const isValidImage = (file) => AVAILABLE_IMAGE_TYPES.includes(file.type)
 
 setHandlers({
   onSelectFile: (file) => {
-    if(!file) return log('No file chosen')
-    if(!isValidImage(file)) return log(`not a valid Image file : ${file.name}`)
+    if (!file) return log('No file chosen')
+    if (!isValidImage(file)) return log(`not a valid Image file : ${file.name}`)
 
     loadImage(file).then((img) => {
       setState({
@@ -35,20 +35,20 @@ setHandlers({
         height: pixelsToInches(img.naturalHeight)
       })
 
-      log('Loaded Image w/dimensions ' + img.naturalWidth + ' x ' + img.naturalHeight)
+      log(`Loaded Image w/dimensions ${img.naturalWidth} x ${img.naturalHeight}`)
     })
   },
 
   onGenerate: () => {
-    if(!state.img) return log('No image loaded')
+    if (!state.img) return log('No image loaded')
 
     savedData = Object.assign({}, state)
 
-    log('Generated Image:' + JSON.stringify(savedData))
+    log(`Generated Image: ${JSON.stringify(savedData)}`)
   },
 
   onLoad: () => {
-    if(!savedData) return log('No data to load')
+    if (!savedData) return log('No data to load')
     setState(savedData)
   },
 

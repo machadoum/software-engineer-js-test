@@ -22,7 +22,7 @@ const setHandlers = (handlersObjs) => {
 
 const debugContainer = document.getElementById('debug-container')
 
-const log = (msg) => debugContainer.innerHTML += '<p>' + msg + '</p>'
+const log = (msg) => { debugContainer.innerHTML += `<p>${msg}</p>` }
 
 module.exports = {
   setHandlers,
