@@ -1,6 +1,7 @@
 const loadImage = require('./load-image')
 const { pixelsToInches } = require('./conversion')
 const { setHandlers, log, canvas } = require('./view')
+const storage = require('./storage')
 
 const MOVE_STEP = 0.3
 const SCALE_RATE = 0.1
@@ -8,7 +9,6 @@ const AVAILABLE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif']
 
 const initialState = { img: undefined, id: undefined, x: 0, y: 0, width: 0, height: 0 }
 let state = Object.assign({}, initialState)
-let savedData
 
 const render = () => {
   const newState = canvas.renderImage(state.img, state)
@@ -42,14 +42,14 @@ setHandlers({
   onGenerate: () => {
     if (!state.img) return log('No image loaded')
 
-    savedData = Object.assign({}, state)
+    storage.record(state)
 
-    log(`Generated Image: ${JSON.stringify(savedData)}`)
+    log(`Generated Image: ${JSON.stringify(state)}`)
   },
 
   onLoad: () => {
-    if (!savedData) return log('No data to load')
-    setState(savedData)
+    if (storage.isEmpty()) return log('No data to load')
+    setState(storage.load())
   },
 
   onMoveLeft: () => setState({ x: state.x - MOVE_STEP }),
