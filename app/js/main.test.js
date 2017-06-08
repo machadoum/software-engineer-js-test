@@ -4,9 +4,9 @@ jest.mock('./load-image')
 jest.useFakeTimers()
 const view = require('./view')
 let handlers
-view.setHandlers.mockImplementation(params => { handlers = params})
+view.setHandlers.mockImplementation((params) => { handlers = params })
 
-const main = require('./main')
+require('./main')
 const loadImage = require('./load-image')
 
 const file = { name: 'testFile', type: 'image/jpeg' }
@@ -45,17 +45,16 @@ describe('photo-editor', () => {
 
     it('does not move', () => {
       handlers.onMoveRight()
-      expect(view.canvas.renderImage)
-        .lastCalledWith(
-          undefined,
-          expect.objectContaining({ x: 0, y: 0 })
-        )
+      expect(view.canvas.renderImage).lastCalledWith(
+        undefined,
+        expect.objectContaining({ x: 0, y: 0 })
+      )
     })
   })
 
   describe('when has file', () => {
     it('onSelectFile calls log when no file selected', () => {
-      const testFile = Object.assign({}, file, { type: 'invalidType'} )
+      const testFile = Object.assign({}, file, { type: 'invalidType' })
       handlers.onSelectFile(testFile)
       expect(view.log).lastCalledWith('not a valid Image file: testFile')
     })
@@ -69,69 +68,79 @@ describe('photo-editor', () => {
       handlers.onSelectFile(file)
     })
 
-    it('calls render with image and selected file when file selected', () => {
-      return loadImagePromise.then(() =>
-        expect(view.canvas.renderImage)
-          .lastCalledWith(img, expect.objectContaining({ id: 'testFile' })))
-    })
+    it('calls render with image and selected file when file selected', () =>
+      loadImagePromise.then(() =>
+        expect(view.canvas.renderImage).lastCalledWith(
+          img,
+          expect.objectContaining({ id: 'testFile' })
+        ))
+    )
 
-    it('improves x when onMoveLeft called', () => {
-      return loadImagePromise.then(() => {
+    it('improves x when onMoveLeft called', () =>
+      loadImagePromise.then(() => {
         handlers.onMoveLeft()
-        expect(view.canvas.renderImage)
-            .lastCalledWith(img, expect.objectContaining({ x: -0.3 }))
+        expect(view.canvas.renderImage).lastCalledWith(
+          img,
+          expect.objectContaining({ x: -0.3 }
+        ))
       })
-    })
+    )
 
-    it('improves x when onMoveRight called', () => {
-      return loadImagePromise.then(() => {
+    it('improves x when onMoveRight called', () =>
+      loadImagePromise.then(() => {
         handlers.onMoveLeft()
         handlers.onMoveRight()
 
-        expect(view.canvas.renderImage)
-            .lastCalledWith(img, expect.objectContaining({ x: 0 }))
+        expect(view.canvas.renderImage).lastCalledWith(
+          img,
+          expect.objectContaining({ x: 0 }
+        ))
       })
-    })
+    )
 
-    it('improves y when onMoveUp called', () => {
-      return loadImagePromise.then(() => {
+    it('improves y when onMoveUp called', () =>
+      loadImagePromise.then(() => {
         handlers.onMoveUp()
-        expect(view.canvas.renderImage)
-            .lastCalledWith(img, expect.objectContaining({ y: -0.3 }))
+        expect(view.canvas.renderImage).lastCalledWith(
+          img,
+          expect.objectContaining({ y: -0.3 }
+        ))
       })
-    })
+    )
 
-    it('improves y when onMoveDown called', () => {
-      return loadImagePromise.then(() => {
+    it('improves y when onMoveDown called', () =>
+      loadImagePromise.then(() => {
         handlers.onMoveUp()
         handlers.onMoveDown()
 
-        expect(view.canvas.renderImage)
-            .lastCalledWith(img, expect.objectContaining({ y: 0 }))
+        expect(view.canvas.renderImage).lastCalledWith(
+          img,
+          expect.objectContaining({ y: 0 }
+        ))
       })
-    })
+    )
 
-    it('scale width and height when onScaleUp called', () => {
-      return loadImagePromise.then(() => {
+    it('scale width and height when onScaleUp called', () =>
+      loadImagePromise.then(() => {
         handlers.onScaleUp()
 
-        expect(view.canvas.renderImage)
-            .lastCalledWith(
-              img,
-              expect.objectContaining({ width: 22.9166, height: 28.6459 }))
+        expect(view.canvas.renderImage).lastCalledWith(
+          img,
+          expect.objectContaining({ width: 22.9166, height: 28.6459 }
+        ))
       })
-    })
+    )
 
-    it('scale width and height when onScaleUp called', () => {
-      return loadImagePromise.then(() => {
+    it('scale width and height when onScaleUp called', () =>
+      loadImagePromise.then(() => {
         handlers.onScaleUp()
         handlers.onScaleDown()
 
-        expect(view.canvas.renderImage)
-            .lastCalledWith(
-              img,
-              expect.objectContaining({ width: 20.6249, height: 25.7813 }))
+        expect(view.canvas.renderImage).lastCalledWith(
+          img,
+          expect.objectContaining({ width: 20.6249, height: 25.7813 }
+        ))
       })
-    })
+    )
   })
 })

@@ -1,4 +1,5 @@
-module.exports = ({ x, y, width, height }, totalWidth, totalHeigh) => {
+module.exports = (parameters, totalWidth, totalHeigh) => {
+  let { x, y, width, height } = parameters
   const aspectRatio = width / height
 
   if (width < totalWidth) {
