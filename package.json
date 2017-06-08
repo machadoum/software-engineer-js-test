@@ -14,10 +14,12 @@
     "gulp-concat": "^2.6.1",
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.6.0",
+    "jest": "^20.0.4",
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
     "start": "gulp dev",
-    "lint": "eslint app/js/*.js"
+    "lint": "eslint app/js/*.js",
+    "test": "jest"
   }
 }

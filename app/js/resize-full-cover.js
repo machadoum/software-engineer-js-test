@@ -17,5 +17,5 @@ module.exports = ({ x, y, width, height }, totalWidth, totalHeigh) => {
   if (width - totalWidth < -x) x = totalWidth - width
   if (height - totalHeigh < -y) y = totalHeigh - height
 
-  return { x, y, width, height }
+  return { x, y, width: Number(width.toFixed(4)), height: Number(height.toFixed(4)) }
 }

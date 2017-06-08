@@ -1,13 +1,13 @@
 const { inchesToPixels } = require('./conversion')
 
-const canvas = document.getElementById('canvas')
-const ctx = canvas.getContext('2d')
-
+let canvas, ctx
 let scale = 1 / 3
 
 const initialize = (inchesWidth, inchesHeight, scaleParam = 1 / 3) => {
   scale = scaleParam
   const { width, height } = scaleDownProperties({ width: inchesWidth, height: inchesHeight })
+  canvas = document.getElementById('canvas')
+  ctx = canvas.getContext('2d')
   canvas.width = inchesToPixels(width)
   canvas.height = inchesToPixels(height)
 }

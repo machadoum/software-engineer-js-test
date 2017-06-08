@@ -29,14 +29,16 @@ const isValidImage = (file) => AVAILABLE_IMAGE_TYPES.includes(file.type)
 setHandlers({
   onSelectFile: (file) => {
     if (!file) return log('No file chosen')
-    if (!isValidImage(file)) return log(`not a valid Image file : ${file.name}`)
+    if (!isValidImage(file)) return log(`not a valid Image file: ${file.name}`)
 
     loadImage(file).then((img) => {
       setState({
         id: file.name,
         img,
         width: pixelsToInches(img.naturalWidth),
-        height: pixelsToInches(img.naturalHeight)
+        height: pixelsToInches(img.naturalHeight),
+        x: 0,
+        y: 0
       })
 
       log(`Loaded Image w/dimensions ${img.naturalWidth} x ${img.naturalHeight}`)
