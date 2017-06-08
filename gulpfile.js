@@ -2,7 +2,7 @@
 
 // Load plugins
 const gulp        = require('gulp'),
-      babel       = require('gulp-babel'),
+      babel       = require('babelify'),
       browserSync = require('browser-sync'),
       concat      = require('gulp-concat'),
       clean       = require('gulp-clean'),
@@ -86,12 +86,13 @@ gulp.task('styles', () => {
 gulp.task('scripts', ['browserify', 'js']);
 
 gulp.task('js', () => {
-    return bundler.bundle()
+    return bundler.transform("babelify", { presets: ["es2015"] }).bundle()
         .on('error', function( e ) {
             logError( e );
             this.emit('end');
         })
         .pipe(source('app/js/main.js'))
+
         .pipe(gulp.dest(OUTPUT_PATH))
                 //notify browserSync to refresh
         .pipe(browserSync.reload({stream: true}));
